@@ -14,7 +14,7 @@ def add_record():
     if not request.json or 'content' not in request.json:
         abort(400)
     print request.json['content']
-    return 'OK', 201
+    return '', 204
 
 
 @app.errorhandler(400)
