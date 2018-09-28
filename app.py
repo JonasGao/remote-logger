@@ -1,14 +1,9 @@
 #!remote-logger/bin/python
-import logging
-
 from flask import Flask, request, abort, jsonify
 
-app = Flask(__name__)
+from collector_logger import logger
 
-if __name__ != '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
+app = Flask(__name__)
 
 
 @app.route('/')
@@ -20,7 +15,8 @@ def index():
 def add_record():
     if not request.json or 'content' not in request.json:
         abort(400)
-    app.logger.info(request.json['content'])
+    content = request.json['content']
+    logger.info(content)
     return '', 204
 
 
