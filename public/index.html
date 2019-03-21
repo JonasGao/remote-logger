@@ -11,7 +11,9 @@
   </form>
   <script src="https://socket-io-chat.now.sh/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    const socket = io({
+      transports: ['websocket']
+    });
     function send() {
       const content = document.form1.content.value
       if (content) {
