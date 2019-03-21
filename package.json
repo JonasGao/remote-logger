@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "remote-logger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "JonasGao",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.16.4",
+    "socket.io": "2.2.0"
+  }
+}

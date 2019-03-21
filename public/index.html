@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+</head>
+<body>
+  <form name="form1">
+    <input type="text" name="content" />
+    <button onclick="send()" type="button">发送</button>
+  </form>
+  <script src="https://socket-io-chat.now.sh/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    function send() {
+      const content = document.form1.content.value
+      if (content) {
+        socket.emit('log', content);
+      }
+    }
+  </script>
+</body>
+</html>

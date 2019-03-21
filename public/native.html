@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+</head>
+<body>
+  <form name="form1">
+    <input type="text" name="content" />
+    <button onclick="send()" type="button">发送</button>
+  </form>
+  <script>
+    const socket = new WebSocket('ws://localhost:3000')
+    // Open the socket
+    socket.onopen = function(event) {
+      
+      // Send an initial message
+      socket.send('I am the client and I\'m listening!');
+      
+      // Listen for messages
+      socket.onmessage = function(event) {
+        console.log('Client received a message',event);
+      };
+      
+      // Listen for socket closes
+      socket.onclose = function(event) {
+        console.log('Client notified socket has closed',event);
+      };
+      
+      // To close the socket....
+      //socket.close()
+      
+    };
+    function send() {
+      const content = document.form1.content.value
+      if (content) {
+        socket.send('log', content);
+      }
+    }
+  </script>
+</body>
+</html>
