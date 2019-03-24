@@ -3,24 +3,23 @@ const app = express();
 const http = require("http").Server(app);
 const port = process.env.PORT || 8888;
 const socket = require("socket.io");
+const appFileHandler = require("./handlers/appFileHandler");
+const consoleHandler = require("./handlers/consoleHandler");
 
 app.use(express.static(__dirname + "/public"));
 
-const v1Handler = data => {
-  console.log(data);
-  return true;
-};
-const v2Handler = data => {
-  if (data.v && data.v == 2) {
-    // TODO: start here
-    console.log('v2!', data)
-    return true;
-  }
-  return false;
-};
-
+const handlers = [appFileHandler, consoleHandler];
 const logHandler = data => {
-  v2Handler(data) || v1Handler(data);
+  const context = {
+    data: data,
+    complete: false
+  };
+  handlers.forEach(handler => {
+    if (context.complete) {
+      return;
+    }
+    handler(context);
+  });
 };
 const ioOption = {
   transports: ["websocket"],
