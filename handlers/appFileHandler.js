@@ -43,4 +43,3 @@ const appFileHandler = context => {
 };
 
 module.exports = appFileHandler;
-exports.default = appFileHandler;

@@ -3,4 +3,3 @@ const consoleHandler = context => {
 };
 
 module.exports = consoleHandler
-exports.default = consoleHandler

@@ -5,12 +5,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "nodemon index"
   },
   "author": "JonasGao",
   "license": "ISC",
   "dependencies": {
     "express": "4.16.4",
     "socket.io": "2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }

@@ -6,32 +6,6 @@
   <link rel="stylesheet" type="text/css" href="./index.css"/>
 </head>
 <body>
-  <form name="form1">
-    <input type="text" name="content" value="1" />
-    <button onclick="send()" type="button">发送</button>
-  </form>
-  <form name="form2">
-    <input type="text" name="content" value="2"/>
-    <button onclick="sendV2()" type="button">发送</button>
-  </form>
-  <script src="https://socket-io-chat.now.sh/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io({
-      transports: ['websocket']
-    });
-    const send = () => {
-      const content = document.form1.content.value
-      if (content) {
-        socket.emit('log', content);
-      }
-    }
-
-    const sendV2 = () => {
-      const content = document.form2.content.value
-      if (content) {
-        socket.emit('log', { v:2, app: 'V2 DEMO', content: content })
-      }
-    }
-  </script>
+  <h1>Hello, World!</h1>
 </body>
 </html>
