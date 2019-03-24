@@ -1,20 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Demo</title>
-  <link rel="stylesheet" type="text/css" href="./index.css"/>
-</head>
-<body>
-  <script src="https://socket-io-chat.now.sh/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io("/monitor", {
-      transports: ['websocket']
-    });
-    
-    socket.on('log', (...args) => {
-      console.log('??', args)
-    });
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Demo</title>
+    <link rel="stylesheet" type="text/css" href="./monitor.css" />
+  </head>
+  <body>
+    <ul id="logList"></ul>
+    <script src="/socket.io.js"></script>
+    <script>
+      const socket = io("/monitor", {
+        transports: ["websocket"]
+      });
+      const logList = document.getElementById("logList");
+      const appendLog = data => {
+        const logLi = document.createElement("li");
+        const logCode = document.createElement("code");
+        const logPre = document.createElement("pre");
+        logLi.appendChild(logCode);
+        logCode.appendChild(logPre);
+        if (typeof data === "object") {
+          if (data.app) {
+            data = `[app] ${data.app} [content] ${data.content}`;
+          } else {
+            data = JSON.stringify(data);
+          }
+        }
+        logPre.innerHTML = data;
+
+        logList.appendChild(logLi);
+      };
+
+      socket.on("log", data => {
+        console.log("reciving [data]", data);
+        appendLog(data);
+      });
+    </script>
+  </body>
 </html>
