@@ -1,16 +1,24 @@
-const fsPromises = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 const endOfLine = require('os').EOL;
 const logPath = require("../config").logPath;
 
 const mkdir = filename => {
   const { dir } = path.parse(filename);
-  return fsPromises.mkdir(dir, { recursive: true });
+  return new Promise((resolve, reject) => {
+    fs.mkdir(dir, { recursive: true }, err=>{
+      err ? reject(err) : resolve()
+    });
+  })
 };
 
 const appendFile = async (path, data) => {
   await mkdir(path);
-  return fsPromises.appendFile(path, data + endOfLine);
+  return new Promise((resolve, reject) => {
+    fs.appendFile(path, data + endOfLine, err => {
+      err ? reject(err) : resolve()
+    });
+  })
 };
 
 const getAppLogFileName = appName => {
