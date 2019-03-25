@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="./monitor.css" />
   </head>
   <body>
-    <ul id="logList"></ul>
+    <p id="logList"></p>
     <script src="/socket.io.js"></script>
     <script>
       const socket = io("/monitor", {
@@ -14,10 +14,8 @@
       });
       const logList = document.getElementById("logList");
       const appendLog = data => {
-        const logLi = document.createElement("li");
         const logCode = document.createElement("code");
         const logPre = document.createElement("pre");
-        logLi.appendChild(logCode);
         logCode.appendChild(logPre);
         if (typeof data === "object") {
           if (data.app) {
@@ -28,7 +26,8 @@
         }
         logPre.innerHTML = data;
 
-        logList.appendChild(logLi);
+        logList.appendChild(logCode);
+        scrollTo(0, document.body.scrollHeight);
       };
 
       socket.on("log", data => {
