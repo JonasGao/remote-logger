@@ -2,28 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Demo</title>
-  <link rel="stylesheet" type="text/css" href="./index.css"/>
+  <title>测试工具</title>
+  <link rel="stylesheet" type="text/css" href="./test.css"/>
 </head>
 <body>
-  <form name="form1">
-    <input type="text" name="content" value="1" />
-    <button onclick="send()" type="button">发送</button>
-  </form>
-  <form name="form2">
-    <input type="text" name="content" value="2"/>
-    <button onclick="sendV2()" type="button">发送</button>
-  </form>
+  <section>
+    <header>
+      纯文本测试
+    </header>
+    <div>
+      <form name="form1">
+        <input type="text" name="content" value="1" required/>
+        <button onclick="send()" type="button">发送</button>
+      </form>
+    </div>
+    <div>
+      <button onclick="autoSend()" type="button">自动发送测试</button>
+    </div>
+  </section>
+  <section>
+    <header>
+      第二版格式测试
+    </header>
+    <form name="form2">
+      <input type="text" name="content" value="2" required/>
+      <button onclick="sendV2()" type="button">发送</button>
+    </form>
+  </section>
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    const context = {
+      timer: null
+    }
+
     const socket = io({
       transports: ['websocket']
     });
+
     const send = () => {
       const content = document.form1.content.value
       if (content) {
         socket.emit('log', content);
       }
+    }
+
+    const autoSend = () => {
+      if (context.timer) {
+        clearInterval(context.timer)
+        context.timer = null
+        return
+      }
+      context.timer = setInterval(send, 500);
     }
 
     const sendV2 = () => {
