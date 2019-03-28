@@ -10,13 +10,13 @@ html, body, .container {
 .side-bar {
   position: fixed;
   top: 0;
-  width: 10%;
+  width: 3rem;
   height: 100%;
   background: #f7f7f7;
 }
 
 .log-container {
-  padding-left: 10%;
+  padding-left: 3rem;
 }
 
 .auto-scroll.active {
