@@ -63,7 +63,7 @@
         scrollToBottom();
       });
 
-      window.addEventListener('keyup', event => {
+      document.addEventListener('keyup', event => {
         if (event.key === 'a') {
           document.querySelector('.auto-scroll').dispatchEvent(new MouseEvent('click'))
         }
