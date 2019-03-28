@@ -17,7 +17,7 @@
       </form>
     </div>
     <div>
-      <button onclick="autoSend()" type="button">自动发送测试</button>
+      <button onclick="autoSend(event)" type="button">自动发送测试</button>
     </div>
   </section>
   <section>
@@ -31,9 +31,7 @@
   </section>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const context = {
-      timer: null
-    }
+    const context = {}
 
     const socket = io({
       transports: ['websocket']
@@ -46,12 +44,15 @@
       }
     }
 
-    const autoSend = () => {
+    const autoSend = event => {
       if (context.timer) {
         clearInterval(context.timer)
         context.timer = null
+        event.target.innerHTML = context.timerBtnText;
         return
       }
+      context.timerBtnText = event.target.innerHTML;
+      event.target.innerHTML = '停止' + event.target.innerHTML;
       context.timer = setInterval(send, 500);
     }
 

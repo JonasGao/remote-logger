@@ -18,7 +18,7 @@ const initLogSocket = socket => {
   socket.on("log", logHandler);
   socket.on("log", data => {
     monitors.forEach(monitor => {
-      monitor.emit("log", data);
+      monitor.emit("log", { id: socket.id, data });
     });
   });
 };

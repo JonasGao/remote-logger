@@ -26,7 +26,7 @@
 
       const logList = document.getElementById("logList");
 
-      const appendLog = data => {
+      const appendLog = (id, data) => {
         const logCode = document.createElement("code");
         const logPre = document.createElement("pre");
         logCode.appendChild(logPre);
@@ -34,10 +34,13 @@
           if (data.app) {
             data = `[app] ${data.app} [content] ${data.content}`;
           } else {
-            data = JSON.stringify(data);
+            data = `[content] ${JSON.stringify(data)}`;
           }
+        } else {
+          data = `[content] ${data}`;
         }
-        logPre.innerHTML = data;
+
+        logPre.innerHTML = `[来自设备] ${id} ${data}`;
 
         logList.appendChild(logCode);
       };
@@ -57,9 +60,9 @@
         event.target.classList.toggle("active")
       }
 
-      socket.on("log", data => {
-        console.log("reciving [data]", data);
-        appendLog(data);
+      socket.on("log", ({id, data}) => {
+        console.log("reciving [id]", id, "[data]", data);
+        appendLog(id, data);
         scrollToBottom();
       });
 
