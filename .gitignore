@@ -4,3 +4,4 @@
 remote-logger.tar.gz
 /.idea/
 yarn.lock
+build.sh
