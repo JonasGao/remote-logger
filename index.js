@@ -3,7 +3,7 @@ const app = express();
 const http = require("http").Server(app);
 const port = process.env.PORT || 8888;
 const socket = require("socket.io");
-const getLogHandler = require("./handler");
+const getLogHandlers = require("./handlers");
 
 app.use(express.static(__dirname + "/public"));
 
@@ -14,7 +14,7 @@ const io = socket(http, ioOption);
 const monitors = [];
 
 const initLogSocket = socket => {
-  const logHandler = getLogHandler(socket);
+  const logHandler = getLogHandlers(socket);
   socket.on("log", logHandler);
   socket.on("log", data => {
     monitors.forEach(monitor => {

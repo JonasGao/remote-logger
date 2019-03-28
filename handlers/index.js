@@ -1,7 +1,8 @@
-const appFileHandler = require("./handlers/appFileHandler");
-const consoleHandler = require("./handlers/consoleHandler");
+const appFileHandler = require("./appFileHandler");
+const consoleHandler = require("./consoleHandler");
 
 const handlers = [appFileHandler, consoleHandler];
+
 const getLogHandler = socket => {
   return data => {
     const context = {
