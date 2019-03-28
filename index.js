@@ -8,8 +8,7 @@ const getLogHandler = require("./handler");
 app.use(express.static(__dirname + "/public"));
 
 const ioOption = {
-  transports: ["websocket"],
-  serveClient: false
+  transports: ["websocket"]
 };
 const io = socket(http, ioOption);
 const monitors = [];

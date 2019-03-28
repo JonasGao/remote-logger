@@ -2,3 +2,5 @@
 /node_modules
 /logs
 remote-logger.tar.gz
+/.idea/
+yarn.lock
