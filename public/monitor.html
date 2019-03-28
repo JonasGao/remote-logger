@@ -6,13 +6,26 @@
     <link rel="stylesheet" type="text/css" href="./monitor.css" />
   </head>
   <body>
-    <p id="logList"></p>
+    <div class="container">
+      <div class="side-bar">
+        <button class="auto-scroll active" onclick="switchAutoScroll(event)">自动滚动(快捷键 a)</button>
+      </div>
+      <div class="log-container">
+        <p id="logList"></p>
+      </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      const option = {
+        autoScroll: true
+      };
+
       const socket = io("/monitor", {
         transports: ["websocket"]
       });
+
       const logList = document.getElementById("logList");
+
       const appendLog = data => {
         const logCode = document.createElement("code");
         const logPre = document.createElement("pre");
@@ -27,13 +40,34 @@
         logPre.innerHTML = data;
 
         logList.appendChild(logCode);
-        scrollTo(0, document.body.scrollHeight);
       };
+
+      const scrollToBottom = () => {
+        if (option.autoScroll) {
+          scroll({
+            top: document.body.scrollHeight,
+            left: 0,
+            behavior: 'smooth'
+          });
+        }
+      }
+
+      const switchAutoScroll = event => {
+        option.autoScroll = !option.autoScroll;
+        event.target.classList.toggle("active")
+      }
 
       socket.on("log", data => {
         console.log("reciving [data]", data);
         appendLog(data);
+        scrollToBottom();
       });
+
+      window.addEventListener('keyup', event => {
+        if (event.key === 'a') {
+          document.querySelector('.auto-scroll').dispatchEvent(new MouseEvent('click'))
+        }
+      })
     </script>
   </body>
 </html>

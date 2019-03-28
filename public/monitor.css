@@ -1,4 +1,32 @@
-ul, li, pre {
+* {
   padding: 0;
   margin: 0;
+}
+
+html, body, .container {
+  height: 100%;
+}
+
+.side-bar {
+  position: fixed;
+  top: 0;
+  width: 10%;
+  height: 100%;
+  background: #f7f7f7;
+}
+
+.log-container {
+  padding-left: 10%;
+}
+
+.auto-scroll.active {
+  border: 1px solid #626262;
+  color: #000000;
+  background: #e6e6e6;
+}
+
+.auto-scroll.active {
+  border: 1px solid #626262;
+  color: #ffffff;
+  background: #315af7;
 }
