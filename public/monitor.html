@@ -11,10 +11,11 @@
         <button class="auto-scroll active" onclick="switchAutoScroll(event)">自动滚动(快捷键 a)</button>
       </div>
       <div class="log-container">
-        <p id="logList"></p>
+        <log-list id="list0"/>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/monitor.js"></script>
     <script>
       const option = {
         autoScroll: true
@@ -24,25 +25,24 @@
         transports: ["websocket"]
       });
 
-      const logList = document.getElementById("logList");
+      const logList = document.getElementById("list0");
 
       const appendLog = (id, data) => {
-        const logCode = document.createElement("code");
-        const logPre = document.createElement("pre");
-        logCode.appendChild(logPre);
+        const [setLogInfo, setLogContent] = logList.addRow()
+
         if (typeof data === "object") {
-          if (data.app) {
-            data = `[app] ${data.app} [content] ${data.content}`;
+          if (data.v === 1) {
+            setLogInfo(`${id}@${data.app}@${data.time} [${data.logger}]:[${data.level}]`)
+            setLogContent(data.content)
+          } else if (data.app) {
+            setLogInfo(`[app] ${data.app}`)
+            setLogContent(data.content)
           } else {
-            data = `[content] ${JSON.stringify(data)}`;
+            setLogContent(JSON.stringify(data))
           }
         } else {
-          data = `[content] ${data}`;
+          setLogContent(data)
         }
-
-        logPre.innerHTML = `[来自设备] ${id} ${data}`;
-
-        logList.appendChild(logCode);
       };
 
       const scrollToBottom = () => {
