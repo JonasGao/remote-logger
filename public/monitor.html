@@ -27,6 +27,22 @@
 
       const logList = document.getElementById("list0");
 
+      const getLevelColor = level => {
+        switch(level) {
+          case "DEBUG":
+            return 'blue';
+          case "ERROR":
+            return 'red';
+        }
+      }
+
+      const getLevelMark = level => {
+        const span = document.createElement('span');
+        span.innerHTML = level
+        span.style.color = getLevelColor(level)
+        return span
+      }
+
       const appendLog = (id, data) => {
         const [setId, setApp, setTime, setLogger, setLevel, setContent] = logList.addRow()
         setId(id)
@@ -38,7 +54,7 @@
             setApp(data.app)
             setTime(data.time)
             setLogger(data.logger)
-            setLevel(data.level)
+            setLevel(getLevelMark(data.level))
             setContent(data.content)
             break;
           default:
