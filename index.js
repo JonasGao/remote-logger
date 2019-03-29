@@ -15,10 +15,10 @@ const monitors = [];
 
 const initLogSocket = socket => {
   const logHandler = getLogHandlers(socket);
-  socket.on("log", logHandler);
   socket.on("log", data => {
+    const context = logHandler(data);
     monitors.forEach(monitor => {
-      monitor.emit("log", { id: socket.id, data });
+      monitor.emit("log", { id: socket.id, data: context.data });
     });
   });
 };

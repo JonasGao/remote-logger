@@ -1,7 +1,8 @@
 const appFileHandler = require("./appFileHandler");
 const consoleHandler = require("./consoleHandler");
+const logParser = require("./logParser");
 
-const handlers = [appFileHandler, consoleHandler];
+const handlers = [logParser, appFileHandler, consoleHandler];
 
 const getLogHandler = socket => {
   return data => {
@@ -16,7 +17,8 @@ const getLogHandler = socket => {
       }
       handler(context);
     });
+    return context;
   };
 };
 
-module.exports = getLogHandler
+module.exports = getLogHandler;

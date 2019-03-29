@@ -29,7 +29,7 @@ const appendFile = async (path, data) => {
 };
 
 const getAppLogFileName = appName => {
-  return path.join(logPath, `${appName.replace(/\s/g, "_")}.log`);
+  return path.join(logPath, `${appName.replace(/\s|:/g, "_")}.log`);
 };
 
 const writeAppLogFile = (appName, data) => {
@@ -45,6 +45,10 @@ const getAppPromise = appName => {
   return promiseHandles[appName] || Promise.resolve();
 };
 
+const buildLog = context => {
+  return `[来自设备] ${context.socket.id} [log] ${context.origin}`
+}
+
 const appFileHandler = context => {
   const data = context.data;
   if (!data.app) {
@@ -52,7 +56,7 @@ const appFileHandler = context => {
   }
   const appName = data.app;
   getAppPromise(appName).then(() => {
-    const promise = writeAppLogFile(data.app, data.content);
+    const promise = writeAppLogFile(data.app, buildLog(context));
     setAppPromise(appName, promise);
   });
 };
