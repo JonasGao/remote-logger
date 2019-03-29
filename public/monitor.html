@@ -32,7 +32,7 @@
 
         if (typeof data === "object") {
           if (data.v === 1) {
-            setLogInfo(`${id}@${data.app}@${data.time} [${data.logger}]:[${data.level}]`)
+            setLogInfo(`${id}  ${data.app}  ${data.time}  [${data.logger}]:[${data.level}]`)
             setLogContent(data.content)
           } else if (data.app) {
             setLogInfo(`[app] ${data.app}`)

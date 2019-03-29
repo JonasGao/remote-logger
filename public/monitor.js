@@ -19,13 +19,13 @@ const buildCode = () => {
 
 const buildContainer = () => {
   const div = document.createElement("div");
-  div.classList.add("log-list__container");
+  div.classList.add("container");
   return div;
 };
 
 const buildCol = index => {
   const div = document.createElement("div");
-  div.classList.add("log-list__col", "log-list__col" + index);
+  div.classList.add("col", "col" + index);
   const [code, setCodeText] = buildCode();
   div.appendChild(code);
   return [div, setCodeText];
@@ -40,7 +40,24 @@ class LogList extends HTMLElement {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
     this.container = buildContainer();
-    this.shadow.append(this.container);
+    const style = document.createElement("style");
+    style.textContent = `
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      .container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .col0 {
+        background: #eaeaea;
+      }
+      .col1 {
+        padding-left: 10px;
+      }
+    `
+    this.shadow.append(style, this.container);
   }
 
   addRow() {
