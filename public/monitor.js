@@ -31,9 +31,15 @@ const buildCol = index => {
   return [div, setCodeText];
 };
 
-const buildRow = () => {
-  return [...buildCol(0), ...buildCol(1)];
+const buildRow = count => {
+  let row = [];
+  for (let i = 0; i < count; i++) {
+    row.push(buildCol(i));
+  }
+  return row;
 };
+
+const COL_COUNT = 6;
 
 class LogList extends HTMLElement {
   constructor() {
@@ -48,22 +54,25 @@ class LogList extends HTMLElement {
       }
       .container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(${COL_COUNT}, auto);
       }
-      .col0 {
+      .col0,.col2,.col4 {
         background: #eaeaea;
       }
-      .col1 {
+      .col {
         padding-left: 10px;
+        padding-right: 10px;
       }
-    `
+    `;
     this.shadow.append(style, this.container);
   }
 
   addRow() {
-    const [col0, set0, col1, set1] = buildRow();
-    this.container.append(col0, col1);
-    return [set0, set1];
+    const rows = buildRow(COL_COUNT);
+    const cols = rows.map(i => i[0])
+    const setters = rows.map(i => i[1])
+    this.container.append(...cols);
+    return setters;
   }
 }
 

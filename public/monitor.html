@@ -28,20 +28,26 @@
       const logList = document.getElementById("list0");
 
       const appendLog = (id, data) => {
-        const [setLogInfo, setLogContent] = logList.addRow()
-
-        if (typeof data === "object") {
-          if (data.v === 1) {
-            setLogInfo(`${id}  ${data.app}  ${data.time}  [${data.logger}]:[${data.level}]`)
-            setLogContent(data.content)
-          } else if (data.app) {
-            setLogInfo(`[app] ${data.app}`)
-            setLogContent(data.content)
-          } else {
-            setLogContent(JSON.stringify(data))
-          }
-        } else {
-          setLogContent(data)
+        const [setId, setApp, setTime, setLogger, setLevel, setContent] = logList.addRow()
+        setId(id)
+        switch (data.v) {
+          case 0:
+            setContent(data.content)
+            break;
+          case 1:
+            setApp(data.app)
+            setTime(data.time)
+            setLogger(data.logger)
+            setLevel(data.level)
+            setContent(data.content)
+            break;
+          default:
+            if (typeof data !== "string") {
+              setContent(JSON.stringify(data))
+            } else {
+              setContent(data)
+            }
+            break
         }
       };
 
