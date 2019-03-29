@@ -17,6 +17,7 @@
       </form>
     </div>
     <div>
+      <button onclick="useExample()" type="button">使用实例</button>
       <button onclick="autoSend(event)" type="button">自动发送测试</button>
     </div>
   </section>
@@ -31,11 +32,17 @@
   </section>
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    const example = '[realtime:staging]:DEBUG:[2019-03-29T02:21:59.020Z]:utils/request: responding [ /huashang/bi/hourly/getSalesAndInventoryDataSummary ] respond [ [200,""] [["cache-control","no-cache"],["connection","keep-alive"],["content-encoding","gzip"],["content-type","application/json;charset=UTF-8"],["date","Fri, 29 Mar 2019 02:21:59 GMT"],["transfer-encoding","Identity"],["vary","Accept-Encoding"]] ] {"code":"0","data":{"allUnit":76865.678,"allUnitYoY":-0.5745,"allAmount":1131013.84,"allAmountYoY":-0.5333,"allSaleProfit":24615.13,"allSaleProfitYoY":-0.8091,"flowCnt":18713,"flowCntYoY":-0.4885}}';
+
     const context = {}
 
     const socket = io({
       transports: ['websocket']
     });
+
+    const useExample = () => {
+      document.form1.content.value = example
+    }
 
     const send = () => {
       const content = document.form1.content.value
