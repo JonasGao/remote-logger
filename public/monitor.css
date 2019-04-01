@@ -19,13 +19,13 @@ html, body, .container {
   padding-left: 3.2rem;
 }
 
-.auto-scroll.active {
+.btn.active {
   border: 1px solid #626262;
   color: #000000;
   background: #e6e6e6;
 }
 
-.auto-scroll.active {
+.btn.active {
   border: 1px solid #626262;
   color: #ffffff;
   background: #315af7;

@@ -8,17 +8,26 @@
   <body>
     <div class="container">
       <div class="side-bar">
-        <button class="auto-scroll active" onclick="switchAutoScroll(event)">自动滚动(快捷键 a)</button>
+        <button
+          class="auto-scroll btn active"
+          onclick="switchAutoScroll(event)"
+        >
+          自动滚动(快捷键 a)
+        </button>
+        <button class="toggle-log btn" onclick="toggleLog(event)">
+          停止接收(快捷键 s)
+        </button>
       </div>
       <div class="log-container">
-        <log-list id="list0"/>
+        <log-list id="list0" />
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/monitor.js"></script>
     <script>
       const option = {
-        autoScroll: true
+        autoScroll: true,
+        stop: false
       };
 
       const socket = io("/monitor", {
@@ -28,42 +37,49 @@
       const logList = document.getElementById("list0");
 
       const getLevelColor = level => {
-        switch(level) {
+        switch (level) {
           case "DEBUG":
-            return 'blue';
+            return "blue";
           case "ERROR":
-            return 'red';
+            return "red";
         }
-      }
+      };
 
       const getLevelMark = level => {
-        const span = document.createElement('span');
-        span.innerHTML = level
-        span.style.color = getLevelColor(level)
-        return span
-      }
+        const span = document.createElement("span");
+        span.innerHTML = level;
+        span.style.color = getLevelColor(level);
+        return span;
+      };
 
       const appendLog = (id, data) => {
-        const [setId, setApp, setTime, setLogger, setLevel, setContent] = logList.addRow()
-        setId(id)
+        const [
+          setId,
+          setApp,
+          setTime,
+          setLogger,
+          setLevel,
+          setContent
+        ] = logList.addRow();
+        setId(id);
         switch (data.v) {
           case 0:
-            setContent(data.content)
+            setContent(data.content);
             break;
           case 1:
-            setApp(data.app)
-            setTime(data.time)
-            setLogger(data.logger)
-            setLevel(getLevelMark(data.level))
-            setContent(data.content)
+            setApp(data.app);
+            setTime(data.time);
+            setLogger(data.logger);
+            setLevel(getLevelMark(data.level));
+            setContent(data.content);
             break;
           default:
             if (typeof data !== "string") {
-              setContent(JSON.stringify(data))
+              setContent(JSON.stringify(data));
             } else {
-              setContent(data)
+              setContent(data);
             }
-            break
+            break;
         }
       };
 
@@ -72,27 +88,45 @@
           scroll({
             top: document.body.scrollHeight,
             left: 0,
-            behavior: 'smooth'
+            behavior: "smooth"
           });
         }
-      }
+      };
 
       const switchAutoScroll = event => {
         option.autoScroll = !option.autoScroll;
-        event.target.classList.toggle("active")
-      }
+        event.target.classList.toggle("active");
+      };
 
-      socket.on("log", ({id, data}) => {
+      const toggleLog = event => {
+        option.stop = !option.stop;
+        appendLog("", option.stop ? "停止" : "开始");
+        event.target.classList.toggle("active");
+      };
+
+      socket.on("log", ({ id, data }) => {
         console.log("reciving [id]", id, "[data]", data);
+        if (option.stop) {
+          return;
+        }
         appendLog(id, data);
         scrollToBottom();
       });
 
-      document.addEventListener('keyup', event => {
-        if (event.key === 'a') {
-          document.querySelector('.auto-scroll').dispatchEvent(new MouseEvent('click'))
+      document.addEventListener("keyup", event => {
+        switch (event.key) {
+          case "a":
+            document
+              .querySelector(".auto-scroll")
+              .dispatchEvent(new MouseEvent("click"));
+            break;
+          case "s":
+            document
+              .querySelector(".toggle-log")
+              .dispatchEvent(new MouseEvent("click"));
+            break;
         }
-      })
+      });
     </script>
   </body>
 </html>
