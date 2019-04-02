@@ -116,6 +116,7 @@
 
       const applyFilter = () => {
         const pattern = document.getElementById('filter').value;
+        localStorage.setItem('filter', pattern)
         option.filter = new RegExp(pattern)
         appendLog("", '过滤应用');
       }
@@ -163,6 +164,9 @@
             break;
         }
       });
+
+      const pattern = localStorage.getItem('filter');
+      document.getElementById('filter').value = pattern;
     </script>
   </body>
 </html>
