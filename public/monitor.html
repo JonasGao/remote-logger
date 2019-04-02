@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="side-bar">
+      <div class="tool-bar">
         <button
           class="auto-scroll btn active"
           onclick="switchAutoScroll(event)"
@@ -17,9 +17,18 @@
         <button class="toggle-log btn" onclick="toggleLog(event)">
           停止接收(快捷键 s)
         </button>
+        <label class="txt">
+          <input type="text" id="filter"/>
+        </label>
+        <button class="btn primary" onclick="applyFilter(event)">
+          应用过滤
+        </button>
+        <button class="btn second" onclick="clearFilter(event)">
+          重置
+        </button>
       </div>
       <div class="log-container">
-        <log-list id="list0" />
+        <log-list id="list0"></log-list>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
@@ -27,7 +36,8 @@
     <script>
       const option = {
         autoScroll: true,
-        stop: false
+        stop: false,
+        filter: null,
       };
 
       const socket = io("/monitor", {
@@ -104,16 +114,42 @@
         event.target.classList.toggle("active");
       };
 
+      const applyFilter = () => {
+        const pattern = document.getElementById('filter').value;
+        option.filter = new RegExp(pattern)
+        appendLog("", '过滤应用');
+      }
+
+      const clearFilter = () => {
+        option.filter = null;
+        appendLog("", '停止过滤应用');
+      }
+
+      const doFilter = data => {
+        if (data.app && option.filter) {
+          return !option.filter.test(data.app)
+        } else {
+          return false
+        }
+      }
+
       socket.on("log", ({ id, data }) => {
-        console.log("reciving [id]", id, "[data]", data);
+        console.debug("reciving [id]", id, "[data]", data);
         if (option.stop) {
           return;
+        }
+        if (doFilter(data)) {
+          return
         }
         appendLog(id, data);
         scrollToBottom();
       });
 
       document.addEventListener("keyup", event => {
+        if (event.target instanceof HTMLInputElement) {
+          console.log('skip hotkey')
+          return
+        }
         switch (event.key) {
           case "a":
             document
