@@ -60,79 +60,70 @@ let CurrentLogger = (function() {
     };
   }
 
-  class RemoteLogger implements ILogger {
-    static io: SocketIOClientStatic;
+  const io = require('socket.io-client');
+  let socket: SocketIOClient.Socket = null;
 
-    static createSocket(): SocketIOClient.Socket {
-      const socket = RemoteLogger.io({
-        transports: ['websocket'],
-      });
-      socket.on('connect_error', () => socket.close());
+  const getSocket = () => {
+    if (socket) {
       return socket;
     }
+    socket = io({
+      transports: ['websocket'],
+    });
+    socket.on('connect_error', () => socket.close());
+    return socket;
+  };
 
-    static join(...args) {
-      return args
-        .map(function(item) {
-          if (item === null || item === undefined) {
-            return 'null';
-          }
-          if (typeof item === 'object') {
-            return JSON.stringify(item);
-          }
-          return '' + item;
-        })
-        .join(' ');
-    }
+  const join = (...args) => {
+    return args
+      .map(function(item) {
+        if (item === null || item === undefined) {
+          return 'null';
+        }
+        if (typeof item === 'object') {
+          return JSON.stringify(item);
+        }
+        return '' + item;
+      })
+      .join(' ');
+  };
 
-    static factory(instance: RemoteLogger, name: string) {
-      const levelName = name.toUpperCase();
-      instance[name] = createEnabledLogMethod(LEVEL[name], () => {
-        return (message?: any, ...optionalParams: any[]) => {
-          instance.push(levelName, RemoteLogger.join(message, ...optionalParams));
-        };
-      });
-    }
+  const factory = (instance: RemoteLogger, name: string) => {
+    const levelName = name.toUpperCase();
+    instance[name] = createEnabledLogMethod(LEVEL[name], () => {
+      return (message?: any, ...optionalParams: any[]) => {
+        instance.push(levelName, join(message, ...optionalParams));
+      };
+    });
+  };
 
-    static KEY_DATE = '${DATE}';
-    static KEY_LEVEL = '${LEVEL}';
-    static KEY_NAME = '${NAME}';
-    static KEY_CONTENT = '${CONTENT}';
+  const emit = (content: string) => {
+    try {
+      getSocket().emit('log', content);
+    } catch (ignored) {}
+  };
 
-    static CONTENT_PATTERN = `[${RemoteLogger.KEY_DATE}] ${RemoteLogger.KEY_LEVEL} (${
-      RemoteLogger.KEY_NAME
-      }): ${RemoteLogger.KEY_CONTENT}`;
-
+  class RemoteLogger implements ILogger {
     private readonly name: string;
-    private readonly pattern: string;
-    private readonly socket: SocketIOClient.Socket;
     public debug: ILogging;
     public error: ILogging;
     public info: ILogging;
 
     constructor(name) {
       this.name = name;
-      this.pattern = RemoteLogger.CONTENT_PATTERN.replace(RemoteLogger.KEY_NAME, this.name);
-      this.socket = RemoteLogger.createSocket();
-      RemoteLogger.factory(this, 'debug');
-      RemoteLogger.factory(this, 'error');
-      RemoteLogger.factory(this, 'info');
+      factory(this, 'debug');
+      factory(this, 'error');
+      factory(this, 'info');
     }
 
     push(level: string, content: string) {
       content = `[${process.env.APP_NAME}]:${level}:[${new Date().toISOString()}]:${
         this.name
         }: ${content}`;
-      this.emit(content);
-    }
-
-    private emit(content: string) {
-      try {
-        this.socket.emit('log', content);
-      } catch (ignored) {}
+      emit(content);
     }
   }
-  RemoteLogger.io = require('socket.io-client');
+
   return RemoteLogger;
 })();
 
