@@ -4,8 +4,10 @@ const http = require("http").Server(app);
 const port = process.env.PORT || 8888;
 const socket = require("socket.io");
 const getLogHandlers = require("./handlers");
+const reader = require("./reader");
 
 app.use(express.static(__dirname + "/public"));
+app.use("/logs", reader)
 
 const ioOption = {
   transports: ["websocket"]

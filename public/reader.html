@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>查看日志</title>
+</head>
+<body>
+<div class="container">
+   Hello, World!
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    fetch("/logs", {method: "GET"}).then(resp => {
+      resp.text().then(content => {
+        document.querySelector(".container").innerHTML = content
+      })
+    })
+</script>
+</body>
+</html>
